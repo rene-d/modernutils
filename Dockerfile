@@ -55,16 +55,22 @@ RUN curl -skL https://github.com/jesseduffield/lazygit/releases/download/v0.32.2
 RUN curl -skL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/local/bin/jq && chmod +x /usr/local/bin/jq
 
 # Build other C binaries
-RUN curl -skL https://raw.githubusercontent.com/jaseg/lolcat/main/lolcat.c | cc -o /usr/local/bin/lolcat -std=c99 -x c - -lm && strip /usr/local/bin/lolcat
-
 FROM alpine:edge AS tmux-builder
-RUN apk update && apk add gcc musl-dev libevent-static libevent-dev ncurses-static ncurses-dev make curl && \
-    curl -sL https://github.com/tmux/tmux/releases/download/3.2a/tmux-3.2a.tar.gz | tar -C /tmp -xz && \
-    cd /tmp/tmux-3.2a && \
+
+WORKDIR /build
+
+# tmux
+RUN apk update && apk add --no-cache gcc musl-dev libevent-static libevent-dev ncurses-static ncurses-dev make curl && \
+    curl -skL https://github.com/tmux/tmux/releases/download/3.2a/tmux-3.2a.tar.gz | tar -xz && \
+    cd tmux-3.2a && \
     ./configure --prefix=/usr/local --enable-static && \
     make -j && \
     make install
 
+# lolcat-c
+RUN curl -skL https://raw.githubusercontent.com/jaseg/lolcat/main/lolcat.c | \
+    cc -o /usr/local/bin/lolcat -static -std=c99 -x c - -lm && \
+    strip /usr/local/bin/lolcat
 
 #
 # Test suite
