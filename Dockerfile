@@ -55,7 +55,7 @@ RUN curl -skL https://github.com/jesseduffield/lazygit/releases/download/v0.32.2
 RUN curl -skL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/local/bin/jq && chmod +x /usr/local/bin/jq
 
 # Build other C binaries
-FROM alpine:edge AS tmux-builder
+FROM alpine:latest AS tmux-builder
 
 WORKDIR /build
 

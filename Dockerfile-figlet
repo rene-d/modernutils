@@ -33,7 +33,7 @@ RUN curl -skL https://github.com/cacalabs/libcaca/releases/download/v0.99.beta20
     # fix zlib imports when statically linking
     sed -i 's/^\(Libs:.*\)/\1 -lz/;s/^\(Libs.private:\).*$/\1/' /usr/local/lib/pkgconfig/caca.pc
 
-RUN curl -skl http://caca.zoy.org/raw-attachment/wiki/toilet/toilet-0.3.tar.gz | tar -xz && \
+RUN curl -skL http://caca.zoy.org/raw-attachment/wiki/toilet/toilet-0.3.tar.gz | tar -xz && \
     cd toilet-0.3 && \
     ./configure --prefix=/usr/local && \
     make LDFLAGS=-static -j install && \
