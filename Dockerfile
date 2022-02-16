@@ -37,9 +37,9 @@ RUN cargo install --root /usr/local bottom
 RUN cargo install --root /usr/local dua-cli
 RUN cargo install --root /usr/local bat
 RUN cargo install --root /usr/local lsd
-# RUN cargo install --root /usr/local gitui
-# RUN cargo install --root /usr/local lscolors
-# RUN cargo install --root /usr/local fd-find
+RUN cargo install --root /usr/local gitui
+RUN cargo install --root /usr/local lscolors
+RUN cargo install --root /usr/local fd-find
 RUN cargo install --root /usr/local xsv
 RUN cargo install --root /usr/local hexyl
 RUN cargo install --root /usr/local broot
@@ -47,12 +47,19 @@ RUN cargo install --root /usr/local broot
 RUN strip /usr/local/bin/*
 
 # Prebuilt Go binaries
-RUN curl -skL https://github.com/wagoodman/dive/releases/download/v0.10.0/dive_0.10.0_linux_amd64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz dive
-RUN curl -skL https://github.com/junegunn/fzf/releases/download/0.29.0/fzf-0.29.0-linux_amd64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz fzf
-RUN curl -skL https://github.com/jesseduffield/lazygit/releases/download/v0.32.2/lazygit_0.32.2_Linux_x86_64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz lazygit
+RUN if [ $(arch) = x86_64 ]; then \
+    curl -skL https://github.com/wagoodman/dive/releases/download/v0.10.0/dive_0.10.0_linux_amd64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz dive && \
+    curl -skL https://github.com/junegunn/fzf/releases/download/0.29.0/fzf-0.29.0-linux_amd64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz fzf && \
+    curl -skL https://github.com/jesseduffield/lazygit/releases/download/v0.32.2/lazygit_0.32.2_Linux_x86_64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz lazygit; \
+    elif [ $(arch) = aarch64 ]; then \
+    curl -skL https://github.com/wagoodman/dive/releases/download/v0.10.0/dive_0.10.0_linux_arm64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz dive && \
+    curl -skL https://github.com/junegunn/fzf/releases/download/0.29.0/fzf-0.29.0-linux_arm64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz fzf && \
+    curl -skL https://github.com/jesseduffield/lazygit/releases/download/v0.32.2/lazygit_0.32.2_Linux_arm64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz lazygit; \
+    fi
+
 
 # Prebuilt C binaries
-RUN curl -skL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/local/bin/jq && chmod +x /usr/local/bin/jq
+RUN if [ $(arch) = x86_64Ø ]; then curl -skL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/local/bin/jq && chmod +x /usr/local/bin/jq; fi
 
 # Build other C binaries
 FROM alpine:latest AS tmux-builder
