@@ -37,9 +37,9 @@ RUN cargo install --root /usr/local bottom
 RUN cargo install --root /usr/local dua-cli
 RUN cargo install --root /usr/local bat
 RUN cargo install --root /usr/local lsd
-RUN cargo install --root /usr/local gitui
-RUN cargo install --root /usr/local lscolors
-RUN cargo install --root /usr/local fd-find
+# RUN cargo install --root /usr/local gitui
+# RUN cargo install --root /usr/local lscolors
+# RUN cargo install --root /usr/local fd-find
 RUN cargo install --root /usr/local xsv
 RUN cargo install --root /usr/local hexyl
 RUN cargo install --root /usr/local broot
