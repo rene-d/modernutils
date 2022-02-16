@@ -5,7 +5,7 @@ ARG BASETEST=centos:7
 #
 FROM alpine:edge AS figlet-builder
 
-RUN apk update && apk add gcc musl-dev make curl unzip findutils fdupes
+RUN apk update && apk add --no-cache gcc musl-dev make curl unzip findutils fdupes
 
 WORKDIR /build
 
@@ -42,6 +42,8 @@ RUN curl -skL http://caca.zoy.org/raw-attachment/wiki/toilet/toilet-0.3.tar.gz |
 # fonts
 RUN curl -skL -o figlet-fonts-master.zip https://github.com/xero/figlet-fonts/archive/refs/heads/master.zip && \
     unzip -q -o -d /usr/local/share/figlet/ -j figlet-fonts-master.zip && \
+    # curl -skL -o figlet-fonts-master2.zip https://github.com/cmatsuoka/figlet-fonts/archive/refs/heads/master.zip && \
+    # unzip -q -o -d /usr/local/share/figlet/ -j figlet-fonts-master2.zip '*.tlf' '*.flf' && \
     chmod 644 /usr/local/share/figlet/* && \
     fdupes -i -N -q -d /usr/local/share/figlet
 
@@ -51,21 +53,32 @@ RUN (echo '#!/bin/sh' ;\
     echo 'find /usr/local/share/figlet/ -name "*.?lf" -printf "%P\n" | sort | while read a; do a=$(basename "$a" .flf); a=$(basename "$a" .tlf); echo; echo "$a :"; figlet -w120 -f "$a" "${1:-$a}"; done') > /usr/local/bin/figlet-fonts && \
     chmod 755 /usr/local/bin/figlet-fonts
 
+
+# sl
+RUN apk add --no-cache ncurses-dev ncurses-static
+RUN curl -skL -o sl-master.zip https://github.com/mtoyoda/sl/archive/refs/heads/master.zip && \
+    unzip -qo sl-master.zip && \
+    cd sl-master && \
+    cc -O2 -o sl sl.c -lncursesw -static && \
+    install -s sl /usr/local/bin/sl
+
 #
 # tests
 #
 FROM ${BASETEST} AS test
 
 ARG RANDOM 0
-COPY --from=figlet-builder --chown=0:0 /usr/local/share/figlet /usr/local/share/figlet
-COPY --from=figlet-builder --chown=0:0 /usr/local/bin /usr/local/bin
+COPY --from=figlet-builder --chown=0:0 /usr/local/share/figlet /some/where//share/figlet
+COPY --from=figlet-builder --chown=0:0 /usr/local/bin /some/where/bin
+ENV PATH=/some/where/bin:$PATH
+ENV FIGLET_FONTDIR=/some/where/share/figlet
 RUN figlet -f mini Hello | lolcat -f -r | sed 's/^/@\ /' ; echo
-RUN toilet --metal -f small World | sed 's/^/@\ /' ; echo
+RUN toilet -d /some/where/share/figlet --metal -f small World | sed 's/^/@\ /' ; echo
 
 #
 # dist image
 #
 FROM scratch AS figlet
 
-COPY --from=figlet-builder --chown=0:0 /usr/local/share/figlet /usr/local/share/figlet
-COPY --from=figlet-builder --chown=0:0 /usr/local/bin /usr/local/bin
+COPY --from=figlet-builder --chown=0:0 /usr/local/share/figlet /share/figlet
+COPY --from=figlet-builder --chown=0:0 /usr/local/bin /

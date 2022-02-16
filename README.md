@@ -90,6 +90,28 @@ A tool for exploring each layer in a docker image.
 
 Simple terminal UI for git commands.
 
+## Bonus
+
+_Because the terminal is where developers live._
+
+### [figlet](http://www.figlet.org)
+
+FIGlet is a program that creates large characters out of ordinary screen characters.
+
+Tip: set the environment variable `FIGLET_FONTDIR` to your font directory.
+
+### [toilet](https://github.com/cacalabs/toilet)
+
+The Other Implementation of figLET.
+
+### [lolcat](https://github.com/jaseg/lolcat)
+
+High-performance implementation of <https://github.com/busyloop/lolcat>.
+
+### [sl](https://github.com/mtoyoda/sl)
+
+SL(1): Cure your bad habit of mistyping.
+
 ## Links
 
 [awesome cli app](https://github.com/agarrharr/awesome-cli-apps)
