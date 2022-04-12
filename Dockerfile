@@ -43,6 +43,7 @@ RUN cargo install --root /usr/local fd-find
 RUN cargo install --root /usr/local xsv
 RUN cargo install --root /usr/local hexyl
 RUN cargo install --root /usr/local broot
+RUN cargo install --root /usr/local starship
 
 RUN strip /usr/local/bin/*
 
