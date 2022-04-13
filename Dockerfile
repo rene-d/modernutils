@@ -3,12 +3,6 @@ ARG BASETEST=centos:7
 
 
 #
-# Base: Debian Bullseye
-#
-FROM rust:1-bullseye AS bullseye
-
-
-#
 # Base: CentOS 7
 #
 FROM centos:7 AS centos7
@@ -37,12 +31,12 @@ RUN cargo install --root /usr/local bottom
 RUN cargo install --root /usr/local dua-cli
 RUN cargo install --root /usr/local bat
 RUN cargo install --root /usr/local lsd
-RUN cargo install --root /usr/local gitui
+# RUN cargo install --root /usr/local gitui
 RUN cargo install --root /usr/local lscolors
 RUN cargo install --root /usr/local fd-find
 RUN cargo install --root /usr/local xsv
 RUN cargo install --root /usr/local hexyl
-RUN cargo install --root /usr/local broot
+# RUN cargo install --root /usr/local broot
 RUN cargo install --root /usr/local starship
 
 RUN strip /usr/local/bin/*
@@ -50,12 +44,12 @@ RUN strip /usr/local/bin/*
 # Prebuilt Go binaries
 RUN if [ $(arch) = x86_64 ]; then \
     curl -skL https://github.com/wagoodman/dive/releases/download/v0.10.0/dive_0.10.0_linux_amd64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz dive && \
-    curl -skL https://github.com/junegunn/fzf/releases/download/0.29.0/fzf-0.29.0-linux_amd64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz fzf && \
-    curl -skL https://github.com/jesseduffield/lazygit/releases/download/v0.32.2/lazygit_0.32.2_Linux_x86_64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz lazygit; \
+    curl -skL https://github.com/junegunn/fzf/releases/download/0.30.0/fzf-0.30.0-linux_amd64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz fzf && \
+    curl -skL https://github.com/jesseduffield/lazygit/releases/download/v0.34/lazygit_0.34_Linux_x86_64.tar.gz | tar -C /usr/local/bin --owner 0 --group 0 -xz lazygit; \
     fi
 
 # Prebuilt C binaries
-RUN if [ $(arch) = x86_64Ø ]; then curl -skL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/local/bin/jq && chmod +x /usr/local/bin/jq; fi
+RUN if [ $(arch) = x86_64 ]; then curl -skL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/local/bin/jq && chmod +x /usr/local/bin/jq; fi
 
 # Build other C binaries
 FROM alpine:latest AS tmux-builder
